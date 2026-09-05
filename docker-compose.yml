@@ -1,0 +1,29 @@
+services:
+  langflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.langflow
+    image: studymate-langflow:1.12.0
+    container_name: studymate-langflow
+    ports:
+      - "7860:7860"
+    environment:
+      # Local development convenience: no login screen, no API key needed.
+      # See README "Production notes" before exposing Langflow beyond localhost.
+      LANGFLOW_AUTO_LOGIN: "true"
+      LANGFLOW_SKIP_AUTH_AUTO_LOGIN: "true"
+      LANGFLOW_CONFIG_DIR: /app/langflow
+      LANGFLOW_SAVE_DB_IN_CONFIG_DIR: "true"
+
+      # Provider keys stay here, on the server side. They are never sent to the browser.
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+
+      # Exposes the keys above to flows as Langflow global variables of the same name.
+      LANGFLOW_VARIABLES_TO_GET_FROM_ENVIRONMENT: GROQ_API_KEY,GOOGLE_API_KEY
+    volumes:
+      - langflow-data:/app/langflow
+    restart: unless-stopped
+
+volumes:
+  langflow-data:

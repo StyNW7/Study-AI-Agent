@@ -1,0 +1,8 @@
+# Langflow with Groq support.
+#
+# The official image does not bundle `langchain-groq`, and Groq is not listed in
+# Langflow's model catalogue, so the Agent cannot instantiate a Groq model without
+# this package. Everything else is stock Langflow 1.12.0.
+FROM langflowai/langflow:1.12.0
+
+RUN uv pip install --python /app/.venv/bin/python langchain-groq
